@@ -13,16 +13,13 @@ const App = () => {
     name: newName,
     id:persons.length+1,
     }
-    setPersons(persons.concat(personObj))
+    persons.some(element=> element.name===newName)
+      ? window.alert(newName+" is already added to the phonebook!")
+      : setPersons(persons.concat(personObj))
     setNewName("") 
-    persons.forEach(element=> {
-      if(newName===element.name){
-        window.alert(newName+ " is already added to the phonebook!")
-        setPersons(persons.pop())
-      }
-    })
   }
 
+  
   const handleNameChange = (event) =>{
     console.log(event.target.value)
     setNewName(event.target.value)
