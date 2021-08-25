@@ -1,38 +1,65 @@
-.App {
-  text-align: center;
-}
+import React, { useState } from 'react'
+import Person from './components/Person'
+import PersonForm from './components/PersonForm'
+import Filter from './components/Filter'
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
+const App = () => {
+  
+  const [ showFilter, setShowFilter] = useState('')
+  const [ persons, setPersons ] = useState([
+    { name: 'Arto Hellas', number: '040-123456' },
+    { name: 'Ada Lovelace', number: '39-44-5323523' },
+    { name: 'Dan Abramov', number: '12-43-234345' },
+    { name: 'Mary Poppendieck', number: '39-23-6423122' }
+  ]) 
+ 
+  const [ newName, setNewName ] = useState('')
+  const [ newNumber,setNewNumber] = useState('')
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+  const handleNameChange = (event) =>{
+      console.log(event.target.value)
+      setNewName(event.target.value)
+    }
+  
+    const handleNumberChange = (event) =>{
+      setNewNumber(event.target.value)
+    }
+  const addPerson = (event) =>{
+    event.preventDefault()
+    const personObj = {
+    name: newName,
+    number: newNumber,
+    id:persons.length+1,
+    }
+    persons.some(element=> element.name===newName)
+      ? window.alert(newName+" is already added to the phonebook!")
+      : setPersons(persons.concat(personObj))
+    setNewName("")
+    setNewNumber("") 
   }
-}
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+  const handleFilterChange = (event) => {
+    setShowFilter(event.target.value)
   }
-  to {
-    transform: rotate(360deg);
-  }
+
+  
+  return (
+    <div>
+      <h2>Phonebook</h2>
+      <Filter handleFilterChange = {handleFilterChange} showFilter = {showFilter}/>
+      <h3>Add a new </h3>
+      <PersonForm addPerson = {addPerson}
+      handleNameChange = {handleNameChange}
+      handleNumberChange = {handleNumberChange}
+      newName = {newName}
+      newNumber = {newNumber}/>
+      
+      <h2>Numbers</h2>
+      {({showFilter}==='')
+        ?<Person person = {persons}/>
+        :<Person person = {persons.filter(person=>person.name.toLowerCase().includes(showFilter.toLowerCase()))} /> }
+    </div>
+  )
 }
+
+export default App
